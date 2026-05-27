@@ -36,7 +36,7 @@ regd_users.post("/login", (req, res) => {
     username
   };
 
-  return res.status(200).json({ message: "Customer successfully logged in." });
+  return res.status(200).json({ message: "Login successful!" });
 });
 
 // Task 8: Add or modify a book review (authenticated)
