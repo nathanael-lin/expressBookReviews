@@ -36,7 +36,7 @@ regd_users.post("/login", (req, res) => {
     username
   };
 
-  return res.status(200).json({ message: "Login successful!" });
+  return res.status(200).json({ message: "Customer successfully logged in." });
 });
 
 // Task 8: Add or modify a book review (authenticated)
@@ -45,21 +45,14 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   const review = req.query.review;
   const username = req.session.authorization.username;
 
-  if (!review) {
-    return res.status(400).json({ message: "Review text is required as a query parameter." });
-  }
-
   if (!books[isbn]) {
     return res.status(404).json({ message: "Book not found for ISBN: " + isbn });
   }
 
-  // Add or overwrite the review keyed by username
+  // Keying by username handles both add (new user) and modify (same user posts again)
   books[isbn].reviews[username] = review;
 
-  return res.status(200).json({
-    message: `Review for ISBN ${isbn} by ${username} has been added/updated.`,
-    reviews: books[isbn].reviews
-  });
+  return res.status(200).json({ message: "The review for the book with ISBN " + isbn + " has been added/updated." });
 });
 
 // Task 9: Delete a book review (authenticated)
@@ -78,10 +71,7 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
   // Delete only the review belonging to the logged-in user
   delete books[isbn].reviews[username];
 
-  return res.status(200).json({
-    message: `Review for ISBN ${isbn} by ${username} has been deleted.`,
-    reviews: books[isbn].reviews
-  });
+  return res.status(200).json({ message: "Reviews for the ISBN " + isbn + " posted by the user " + username + " deleted." });
 });
 
 module.exports.authenticated = regd_users;
